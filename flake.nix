@@ -67,6 +67,18 @@
 
       templates =
         let
+
+          flake-parts = {
+            path = ./templates/flake-parts;
+            description = "A flake with flake-parts, direnv and devenv.";
+            welcomeText = ''
+              # `.devenv` should be added to `.gitignore`
+              ```sh
+                echo .devenv >> .gitignore
+              ```
+            '';
+          };
+
           simple = {
             path = ./templates/simple;
             description = "A direnv supported Nix flake with devenv integration.";
@@ -79,9 +91,11 @@
           };
         in
         {
-          inherit simple;
+          inherit simple flake-parts;
           default = simple;
         };
+
+      flakeModule = import ./flake-module.nix self;
 
       lib = {
         mkConfig = args@{ pkgs, inputs, modules }:
