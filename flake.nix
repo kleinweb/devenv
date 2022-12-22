@@ -84,7 +84,9 @@
         };
 
       lib = {
-        mkConfig = { pkgs, inputs, modules }:
+        mkConfig = args@{ pkgs, inputs, modules }:
+          (self.lib.mkEval args).config;
+        mkEval = { pkgs, inputs, modules }:
           let
             moduleInputs = { inherit pre-commit-hooks; } // inputs;
             project = inputs.nixpkgs.lib.evalModules {
@@ -104,7 +106,7 @@
               ] ++ modules;
             };
           in
-          project.config;
+          project;
         mkShell = args:
           let
             config = self.lib.mkConfig args;
